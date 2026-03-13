@@ -1,6 +1,6 @@
 # PyMounter
 
-Cross-platform SMB share mounter for macOS and Windows. Automatically mounts a network share at login.
+SMB share mounter for macOS and Windows. Automatically mounts a network share at login.
 
 ## Features
 
