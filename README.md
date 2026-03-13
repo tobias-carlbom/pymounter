@@ -17,11 +17,11 @@ Run the binary once to configure:
 $ ./PyMounter
 First time setup of SMB share:
 Credentials will be AES encrypted locally.
-Server (e.g. 192.168.1.10): 172.31.0.10
+Server (e.g. 192.168.1.10): 192.168.1.10
 Shared folder (e.g. workspace): workspace
-Username: tobias
+Username: username
 Password:
-Successfully stored config in /Users/tobias/.pymounter.dat
+Successfully stored config in /Users/username/.pymounter.dat
 Autostart enabled
 ```
 
