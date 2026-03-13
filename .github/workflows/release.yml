@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install 'nuitka[onefile]' cryptography
+      - run: |
+          nuitka --standalone --output-dir=build --output-filename=PyMounter program.py
+          mkdir -p build/PyMounter.app/Contents/MacOS
+          cp -R build/program.dist/* build/PyMounter.app/Contents/MacOS/
+          cat > build/PyMounter.app/Contents/Info.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>CFBundleExecutable</key><string>PyMounter</string>
+            <key>CFBundleIdentifier</key><string>com.carlbomsdata.mountshare</string>
+            <key>CFBundlePackageType</key><string>APPL</string>
+            <key>LSBackgroundOnly</key><true/>
+          </dict></plist>
+          EOF
+          cd build && zip -r PyMounter-mac.zip PyMounter.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: build/PyMounter-mac.zip
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install 'nuitka[onefile]' cryptography
+      - run: |
+          nuitka --standalone --output-dir=build --output-filename=PyMounter.exe program.py
+          Compress-Archive -Path build/program.dist/* -DestinationPath build/PyMounter-win.zip
+        shell: pwsh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win-build
+          path: build/PyMounter-win.zip
+
+  release:
+    needs: [build-mac, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            mac-build/PyMounter-mac.zip
+            win-build/PyMounter-win.zip
