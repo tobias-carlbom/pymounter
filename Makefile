@@ -17,8 +17,7 @@ all: $(TARGET)
 
 $(BUILD_DIR)/$(NAME).exe: $(SRC)
 	@$(MKDIR)
-	nuitka --standalone --output-dir=$(BUILD_DIR) --output-filename=$(NAME).exe $(SRC)
-	@copy "$(BUILD_DIR)\\program.dist\\$(NAME).exe" "$(BUILD_DIR)\\$(NAME).exe"
+	nuitka --standalone --windows-console-mode=attach --output-dir=$(BUILD_DIR) --output-filename=$(NAME).exe $(SRC)
 
 $(BUILD_DIR)/$(BUNDLE): $(SRC)
 	nuitka --standalone --output-dir=$(BUILD_DIR) --output-filename=$(NAME) $(SRC)

@@ -1,5 +1,6 @@
 import os, sys, getpass, hashlib, base64
 from cryptography.fernet import Fernet
+import time
 
 CONF = os.path.join(os.path.expanduser("~"),
     "pymounter.dat" if sys.platform == "win32" else ".pymounter.dat")
@@ -97,6 +98,7 @@ def setup():
     print(f"Successfully stored config in {CONF}")
     install_autostart(os.path.abspath(sys.argv[0]))
     print(f"Successfully added to autostart")
+    time.sleep(5)
     return fields
 
 if __name__ == "__main__":
@@ -116,10 +118,12 @@ if __name__ == "__main__":
         drive = fields[4] if sys.platform == "win32" else ""
 
         print("START PROGRAM")
+        time.sleep(2)
         resp = os.system(UNMOUNT_CMD.format(share=share, drive=drive))
         if resp != 0:
             print(f"Unmount failed (exit code {resp})")
 
+        time.sleep(2)
         resp = os.system(MOUNT_CMD.format(server=server, share=share, username=username, password=password, drive=drive))
         if resp != 0:
             print(f"Mount failed (exit code {resp})")
@@ -127,6 +131,7 @@ if __name__ == "__main__":
             print(f"Successfully Mounted {share}")
 
         print("END PROGRAM")
+        time.sleep(2)
     except KeyboardInterrupt:
         print("\nCancelled")
         sys.exit(0)

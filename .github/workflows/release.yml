@@ -42,7 +42,7 @@ jobs:
           python-version: '3.13'
       - run: pip install 'nuitka[onefile]' cryptography
       - run: |
-          python -m nuitka --standalone --assume-yes-for-download --output-dir=build --output-filename=PyMounter.exe program.py
+          python -m nuitka --standalone --assume-yes-for-download --windows-console-mode=attach --output-dir=build --output-filename=PyMounter.exe program.py
           Compress-Archive -Path build\program.dist\* -DestinationPath build\PyMounter-win.zip
         shell: pwsh
       - uses: actions/upload-artifact@v4
