@@ -2,6 +2,8 @@
 
 SMB share mounter for macOS and Windows. Automatically mounts a network share at login.
 
+**[Download latest release](https://github.com/tobias-carlbom/pymounter/releases/latest)**
+
 ## Features
 
 - First-time setup wizard with AES-encrypted credential storage
@@ -37,7 +39,7 @@ Removes autostart and deletes the encrypted config file.
 
 ## Build
 
-Requires Python 3.13, Nuitka, and cryptography:
+Requires Python 3.13, Nuitka, cryptography, and make:
 
 ```
 pip install 'nuitka[onefile]' cryptography
@@ -50,33 +52,16 @@ make clean && make
 ```
 
 Output:
+
 - macOS: `build/PyMounter.app`
 - Windows: `build/PyMounter.exe`
 
-## Release
-
-Tag a version to trigger GitHub Actions builds for both platforms:
-
-```
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-Downloads appear on the GitHub Releases page.
-
-## How It Works
-
-1. On first run, prompts for server, share, username, and password (+ drive letter on Windows)
-2. Encrypts credentials with AES (Fernet) using a machine-derived key and stores them locally
-3. Registers itself as a login item (macOS LaunchAgent or Windows Registry Run key)
-4. On subsequent runs, reads the encrypted config and mounts the share silently
-
 ## File Locations
 
-| | Config | Autostart |
-|---|---|---|
-| macOS | `~/.pymounter.dat` | `~/Library/LaunchAgents/com.carlbomsdata.pymounter.plist` |
-| Windows | `%USERPROFILE%\pymounter.dat` | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` |
+|       |Config                       |Autostart                                                |
+|-------|-----------------------------|---------------------------------------------------------|
+|macOS  |`~/.pymounter.dat`           |`~/Library/LaunchAgents/com.carlbomsdata.pymounter.plist`|
+|Windows|`%USERPROFILE%\pymounter.dat`|`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`     |
 
 ## License
 
